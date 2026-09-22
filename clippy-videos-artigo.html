@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentando o Clippy Videos — Blog Clippy Videos</title>
+    <meta name="description" content="Anúncio oficial do Clippy Videos, uma plataforma open-source de compartilhamento e descoberta de vídeos.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #f59e0b;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #475569;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--accent);
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--surface) 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        nav {
+            display: flex;
+            gap: 1.75rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--text);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.55rem 1.25rem;
+            background: var(--primary);
+            color: white !important;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.25rem 1.5rem 0;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb span {
+            margin: 0 0.4rem;
+            opacity: 0.6;
+        }
+
+        /* Article header */
+        .article-header {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 2.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .article-header .tag {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--accent);
+            padding: 0.2rem 0.7rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .article-header h1 {
+            font-size: clamp(1.75rem, 4vw, 2.4rem);
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 1.75rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .author {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .author-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Article body */
+        .article-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 3rem;
+        }
+
+        .article-content p {
+            margin-bottom: 1.35rem;
+            color: var(--text);
+            font-size: 1.05rem;
+        }
+
+        .article-content h2 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            margin: 2.25rem 0 1rem;
+            color: var(--text);
+        }
+
+        .article-content h3 {
+            font-size: 1.2rem;
+            font-weight: 650;
+            margin: 1.75rem 0 0.85rem;
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin: 0 0 1.35rem 1.5rem;
+            color: var(--text);
+        }
+
+        .article-content li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--primary);
+            background: var(--surface);
+            padding: 1.1rem 1.35rem;
+            margin: 1.75rem 0;
+            border-radius: 0 8px 8px 0;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .article-content code {
+            background: var(--surface-light);
+            padding: 0.15rem 0.4rem;
+            border-radius: se;
+            font-size: 0.9em;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+        }
+
+        .article-content pre {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .article-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .highlight-box {
+            background: rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.25);
+            border-radius: 10px;
+            padding: 1.35rem 1.5rem;
+            margin: 1.75rem 0;
+        }
+
+        .highlight-box strong {
+            color: #60a5fa;
+        }
+
+        /* Share & navigation */
+        .article-footer {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+        }
+
+        .share-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .share-section span {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .share-btn {
+            padding: 0.4rem 0.9rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .share-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .post-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 600px) {
+            .post-nav {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .post-nav a {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.25rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .post-nav a:hover {
+            border-color: var(--primary);
+        }
+
+        .post-nav .label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .post-nav .title {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.35;
+        }
+
+        .post-nav .next {
+            text-align: right;
+        }
+
+        /* Related */
+        .related {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+        }
+
+        .related h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .related-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .related-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .related-card .tag {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .related-card h3 {
+            font-size: 1rem;
+            font-weight: 650;
+            margin-bottom: 0.5rem;
+            line-height: 1.35;
+        }
+
+        .related-card h3 a {
+            color: var(--text);
+        }
+
+        .related-card h3 a:hover {
+            color: var(--primary);
+        }
+
+        .related-card p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer .links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        footer .links a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 860px) {
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="clippy-videos-blog.html" class="logo">
+                <div class="logo-icon"><img src="blog-logo.png"></div>
+            </a>
+            <nav>
+                <a href="clippy-videos-blog.html" class="active">Blog</a>
+                <a href="#">Sobre</a>
+                <a href="#">Contribuir</a>
+                <a href="#">Documentação</a>
+            </nav>
+            <a href="https://github.com/Clippy-Videos-Inc" class="btn" target="_blank" rel="noopener">GitHub</a>
+        </div>
+    </header>
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="clippy-videos-blog.html">Blog</a>
+        <span>/</span>
+        <a href="#">Anúncios</a>
+        <span>/</span>
+        <span>Apresentando o Clippy Videos</span>
+    </nav>
+
+    <header class="article-header">
+        <span class="tag">Anúncio</span>
+        <h1>Apresentando o Clippy Videos: uma alternativa open-source para compartilhamento de vídeos</h1>
+        <div class="article-meta">
+            <div class="author">
+                <div class="author-avatar">EC</div>
+                <div>
+                    <strong style="color: var(--text);">Equipe Clippy</strong><br>
+                    <span style="font-size: 0.85rem;">22 de setembro de 2026 · 8 min de leitura</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="article-content">
+        <h2>Esse Anúncio foi Refeito!</h2>
+        <p>
+            Hoje damos o primeiro passo oficial do <strong>Clippy Videos</strong>. O objetivo é simples e ambicioso: criar uma plataforma de hospedagem e descoberta de vídeos que seja completamente open-source e que respeite a privacidade dos usuários.
+        </p>
+
+        <p>
+            Em um cenário dominado por plataformas centralizadas, opacas e orientadas a publicidade, acreditamos que existe espaço — e necessidade — para uma alternativa construída sobre princípios de transparência, interoperabilidade e governança comunitária.
+        </p>
+
+        <h2>A visão por trás do projeto</h2>
+
+        <p>
+            O Clippy Videos nasce no meio de Vários Prótotipos de Sites de Vídeos e ele foi o Escolhido para Continuar Evoluindo.
+        </p>
+
+        <blockquote>
+            “Software livre não é apenas sobre o código. É sobre devolver o controle às pessoas e às comunidades.”
+        </blockquote>
+
+        <p>
+            Nossa ambição de longo prazo é estabelecer uma federação de servidores de vídeo que conversem entre si de forma transparente, utilizando protocolos abertos. Dessa forma, um vídeo publicado em uma instância pode ser descoberto e assistido em outra, sem que o usuário precise criar contas em dezenas de serviços diferentes.
+        </p>
+
+        <h2>Princípios fundamentais</h2>
+
+        <p>Desde o início, definimos um conjunto claro de princípios que orientarão todas as decisões técnicas e de governança:</p>
+
+        <ul>
+            <li><strong>Código aberto por padrão</strong> — Todo o software será publicado sob licença Apache-2.0.</li>
+            <li><strong>Privacidade primeiro</strong> — Nenhum rastreamento invasivo. Dados pessoais só serão coletados quando estritamente necessários e com consentimento explícito.</li>
+            <li><strong>Federação e interoperabilidade</strong> — Prioridade para protocolos abertos.</li>
+            <li><strong>Governança transparente</strong> — Decisões importantes serão discutidas publicamente e documentadas.</li>
+            <li><strong>Hospedagem própria</strong> — Qualquer pessoa (com permissão) deve poder instalar e operar sua própria instância com documentação clara e requisitos modestos.</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>Importante:</strong> O Clippy Videos não pretende competir com plataformas existentes no modelo de negócio tradicional. Nosso foco é oferecer uma infraestrutura livre que comunidades, instituições de ensino, coletivos e indivíduos possam adotar e adaptar.
+        </div>
+
+        <h2>Stack tecnológica inicial</h2>
+
+        <p>
+            Após avaliação cuidadosa, a equipe optou pela seguinte base tecnológica para o protótipo:
+        </p>
+
+        <ul>
+            <li><strong>Backend:</strong> Flask</li>
+            <li><strong>Frontend:</strong> HTML, CSS + JavaScript</li>
+            <li><strong>Banco de dados:</strong> SQL</li>
+            <li><strong>Processamento de mídia:</strong> FFmpeg</li>
+            <li><strong>Protocolo de federação:</strong> Nenhum</li>
+        </ul>
+
+        <p>
+            Essa combinação permite um servidor eficiente, um frontend moderno e reativo, e a base necessária para experimentar a federação de conteúdo desde as primeiras versões.
+        </p>
+
+        <h2>Roadmap dos próximos meses</h2>
+
+        <p>O planejamento inicial contempla as seguintes etapas:</p>
+
+        <ol>
+            <li><strong>Outubro 2026</strong> — Lançamento do Sistema de Conexão entre Servidores.</li>
+            <li><strong>Novembro 2026</strong> — Suporte Estável há Vídeos 360°.</li>
+            <li><strong>Dezembro 2026 – Janeiro 2027</strong> — Melhorar Ainda mais o Studio, Monetização, etc.</li>
+            <li><strong>Primeiro trimestre de 2027</strong> — Implementando IA nos Vídeos.</li>
+        </ol>
+
+        <p>
+            O roadmap é público e será atualizado conforme o feedback da comunidade e o progresso real do desenvolvimento.
+        </p>
+
+        <h2>Como participar</h2>
+
+        <p>
+            O Clippy Videos é um projeto comunitário desde o primeiro dia. Existem diversas formas de contribuir, independentemente do nível de experiência técnica:
+        </p>
+
+        <ul>
+            <li>Acompanhar e comentar as discussões no repositório e no fórum</li>
+            <li>Reportar problemas e sugerir melhorias</li>
+            <li>Contribuir com código, testes ou documentação</li>
+            <li>Ajudar na tradução da interface e dos materiais</li>
+            <li>Testar instâncias de desenvolvimento e fornecer feedback de usabilidade</li>
+        </ul>
+
+        <p>
+            Em breve publicaremos um guia detalhado de contribuição e abriremos os canais oficiais de comunicação (Discord e fórum).
+        </p>
+
+        <h2>Conclusão</h2>
+
+        <p>
+            Este é apenas o começo. O Clippy Videos parte de uma ideia simples — vídeos devem poder circular livremente entre comunidades, sob controle de quem os publica e de quem os hospeda — e busca transformá-la em software concreto, auditável e utilizável.
+        </p>
+
+        <p>
+            Convidamos todos os interessados a acompanhar o desenvolvimento, a questionar as decisões e a participar ativamente da construção desta plataforma. Juntos, podemos demonstrar que uma alternativa open-source viável e ética para o compartilhamento de vídeos é possível.
+        </p>
+
+        <p>
+            Obrigado por estar conosco neste primeiro passo.
+        </p>
+
+        <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">
+            — Equipe Clippy Videos
+        </p>
+    </article>
+
+    <div class="article-footer">
+        <div class="share-section">
+            <span>Compartilhar:</span>
+            <div class="share-buttons">
+                <a href="#" class="share-btn">Twitter / X</a>
+                <a href="#" class="share-btn">Mastodon</a>
+                <a href="#" class="share-btn">LinkedIn</a>
+                <a href="#" class="share-btn">Copiar link</a>
+            </div>
+        </div>
+
+            </a>
+            <a href="#" class="next">
+                <span class="label">Próximo artigo →</span>
+                <span class="title">...</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="related">
+        <h2>Artigos relacionados</h2>
+        <div class="related-grid">
+            <article class="related-card">
+                <span class="tag">Técnico</span>
+                <h3><a href="#">Por que escolhemos uma arquitetura federada desde o início</a></h3>
+                <p>Detalhamos as decisões de design e os primeiros protótipos de sincronização de metadados.</p>
+            </article>
+            </article>
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>Clippy Videos</strong> — Projeto open-source de plataforma de vídeos.</p>
+        <p>Licença: Apache-2.0 · Código disponível publicamente.</p>
+        <div class="links">
+            <a href="https://www.github.com/Clippy-Videos-Inc">GitHub</a>
+            <a href="https://www.github.com/Clippy-Videos-Inc/Clippy-Videos">Documentação</a>
+            <a href="#">Comunidade</a>
+            <a href="#">Contato</a>
+            <a href="#">Política de Privacidade</a>
+        </div>
+    </footer>
+</body>
+</html>
