@@ -1,461 +1,527 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clippy Videos Blog — Projeto Open-Source de Vídeos</title>
-    <meta name="description" content="Blog oficial do Clippy Videos, uma plataforma open-source de compartilhamento e descoberta de vídeos.">
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --accent: #f59e0b;
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --surface-light: #334155;
-            --text: #f1f5f9;
-            --text-muted: #94a3b8;
-            --border: #475569;
-            --success: #10b981;
-        }
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Clippy Videos — Changelog</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Paleta e tipografia Aero: vidro translúcido azul-petróleo sobre um
+     fundo gradiente escuro, títulos em Segoe UI (a fonte-símbolo do
+     Windows Vista/7), texto de corpo na mesma família por autenticidade,
+     e uma face monoespaçada pra metadados técnicos (versões, rotas). */
+  :root {
+    --bg-top: #0a2e52;
+    --bg-bot: #06182e;
+    --glass: rgba(255,255,255,0.14);
+    --glass-strong: rgba(255,255,255,0.24);
+    --glass-edge: rgba(255,255,255,0.55);
+    --titlebar-a: #2a8fd8;
+    --titlebar-b: #0d5aa7;
+    --accent: #3fb6ff;
+    --accent-2: #8de2ff;
+    --fg: #eaf4ff;
+    --fg-dim: #a9c3dc;
+    --chip-bg: rgba(10,40,70,0.55);
+    --orb-a: #3fd16a;
+    --orb-b: #0f8a3c;
+    --font-display: 'Segoe UI', 'Segoe UI Variable', 'Noto Sans', Tahoma, Geneva, Verdana, sans-serif;
+    --font-body: 'Segoe UI', 'Noto Sans', Tahoma, Geneva, Verdana, sans-serif;
+    --font-mono: 'Consolas', 'Cascadia Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    color-scheme: dark;
+  }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  * { box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
+  body {
+    margin: 0;
+    min-height: 100%;
+    font-family: var(--font-body);
+    color: var(--fg);
+    background:
+      radial-gradient(1100px 500px at 50% -12%, rgba(63,182,255,0.35), transparent 60%),
+      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bot) 70%);
+    background-attachment: fixed;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
 
-        a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    z-index: 30;
+    background: var(--titlebar-b);
+  }
 
-        a:hover {
-            color: var(--accent);
-        }
+  a { color: var(--accent-2); }
 
-        /* Header */
-        header {
-            background: linear-gradient(135deg, var(--surface) 0%, #0f172a 100%);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(8px);
-        }
+  ::selection { background: rgba(63,182,255,0.4); }
 
-        .header-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem;
-        }
+  /* ====== BARRA DE TÍTULO (janela Aero) ====== */
+  .aero-window {
+    max-width: 880px;
+    margin: 28px auto 0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08);
+  }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--text);
-        }
+  .titlebar {
+    position: relative;
+    padding: 18px 22px;
+    background: linear-gradient(180deg, var(--titlebar-a) 0%, var(--titlebar-b) 70%, #073a6e 100%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    overflow: hidden;
+  }
+  /* o brilho curvo clássico do Aero Glass, feito com um elipse radial
+     por cima da barra */
+  .titlebar::after {
+    content: "";
+    position: absolute;
+    top: -60%;
+    left: -5%;
+    right: -5%;
+    height: 140%;
+    background: radial-gradient(60% 100% at 50% 0%, rgba(255,255,255,0.55), rgba(255,255,255,0) 70%);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .orb {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: radial-gradient(circle at 32% 28%, #bdf2d2 0%, var(--orb-a) 38%, var(--orb-b) 78%);
+    box-shadow: inset 0 -4px 6px rgba(0,0,0,0.35), inset 0 3px 4px rgba(255,255,255,0.6), 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .titlebar h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.3rem, 4vw, 1.7rem);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    letter-spacing: 0.2px;
+  }
+  .titlebar .sub {
+    margin: 2px 0 0;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.85);
+  }
+  .titlebar .lights {
+    margin-left: auto;
+    display: flex;
+    gap: 7px;
+  }
+  .titlebar .lights span {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    display: block;
+    box-shadow: inset 0 -2px 3px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.7);
+  }
+  .lights .min { background: #f4c542; }
+  .lights .max { background: #4ad66d; }
+  .lights .close { background: #ff5e57; }
 
-        nav {
-            display: flex;
-            gap: 1.75rem;
-            align-items: center;
-        }
+  .glass-strip {
+    height: 10px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
+  }
 
-        nav a {
-            color: var(--text-muted);
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
+  /* ====== CONTEÚDO ====== */
+  main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 28px 0 56px;
+  }
 
-        nav a:hover,
-        nav a.active {
-            color: var(--text);
-        }
+  .intro {
+    background: var(--glass);
+    border: 1px solid var(--glass-edge);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 26px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .intro p {
+    margin: 0 0 10px;
+    line-height: 1.6;
+    color: var(--fg);
+  }
+  .intro p:last-child { margin-bottom: 0; }
+  .intro .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    background: var(--chip-bg);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 3px 9px;
+    border-radius: 999px;
+    color: var(--accent-2);
+    margin-bottom: 10px;
+  }
 
-        .btn {
-            display: inline-block;
-            padding: 0.55rem 1.25rem;
-            background: var(--primary);
-            color: white !important;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: background 0.2s ease, transform 0.15s ease;
-        }
+  /* trilho da linha do tempo */
+  .timeline {
+    position: relative;
+    padding-left: 26px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), rgba(63,182,255,0.05));
+    border-radius: 2px;
+  }
 
-        .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
+  .post {
+    position: relative;
+    margin-bottom: 22px;
+  }
+  .post::before {
+    content: "";
+    position: absolute;
+    left: -26px;
+    top: 22px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #eafaff, var(--accent) 55%, #0e74b8 100%);
+    box-shadow: 0 0 0 4px rgba(63,182,255,0.18), inset 0 1px 1px rgba(255,255,255,0.8);
+  }
 
-        /* Hero */
-        .hero {
-            background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
-            padding: 4rem 1.5rem 3.5rem;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-        }
+  .card {
+    background: linear-gradient(180deg, var(--glass-strong) 0%, var(--glass) 55%, rgba(255,255,255,0.08) 100%);
+    border: 1px solid var(--glass-edge);
+    border-radius: 12px;
+    padding: 0;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+    overflow: hidden;
+  }
+  .card-top {
+    position: relative;
+    padding: 16px 20px 2px;
+  }
+  .card-top::after {
+    /* reflexo de vidro no topo do card, mesma assinatura visual da barra */
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 46px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0));
+    pointer-events: none;
+  }
+  .card h2 {
+    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-size: 1.14rem;
+    font-weight: 700;
+    position: relative;
+  }
+  .card .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .card .date {
+    font-size: 0.78rem;
+    color: var(--fg-dim);
+    font-family: var(--font-mono);
+  }
+  .pill {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: var(--chip-bg);
+    color: var(--accent-2);
+  }
+  .pill.fix { color: #ffd27a; }
+  .pill.feature { color: #8de2ff; }
+  .pill.infra { color: #c9a6ff; }
 
-        .hero h1 {
-            font-size: clamp(1.8rem, 4vw, 2.6rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
-        }
+  .card-body {
+    padding: 4px 20px 20px;
+  }
+  .card-body p {
+    margin: 0 0 12px;
+    line-height: 1.6;
+    color: var(--fg);
+  }
+  .card-body ul {
+    margin: 0 0 4px;
+    padding-left: 20px;
+    color: var(--fg);
+    line-height: 1.55;
+  }
+  .card-body li { margin-bottom: 6px; }
+  .card-body li:last-child { margin-bottom: 0; }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 1px 6px;
+    border-radius: 5px;
+    color: var(--accent-2);
+  }
 
-        .hero p {
-            max-width: 640px;
-            margin: 0 auto 1.75rem;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
+  /* ====== RODAPÉ / LICENÇA ====== */
+  footer {
+    max-width: 880px;
+    margin: 10px auto 40px;
+    background: var(--glass);
+    border: 1px solid var(--glass-edge);
+    border-radius: 14px;
+    padding: 20px 24px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    font-size: 0.85rem;
+    color: var(--fg-dim);
+    line-height: 1.6;
+  }
+  footer strong { color: var(--fg); }
+  footer a { color: var(--accent-2); text-decoration: none; border-bottom: 1px dotted rgba(141,226,255,0.5); }
+  footer a:hover { border-bottom-style: solid; }
 
-        .badge {
-            display: inline-block;
-            background: rgba(37, 99, 235, 0.15);
-            color: #60a5fa;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.3rem 0.75rem;
-            border-radius: 999px;
-            margin-bottom: 1.25rem;
-            border: 1px solid rgba(37, 99, 235, 0.3);
-        }
+  /* ====== BOTÃO VOLTAR AO TOPO (estilo orbe do Iniciar) ====== */
+  .back-top {
+    position: fixed;
+    right: max(22px, env(safe-area-inset-right, 0px));
+    bottom: max(22px, env(safe-area-inset-bottom, 0px));
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: radial-gradient(circle at 32% 28%, #cdeaff 0%, var(--accent) 42%, #0e74b8 85%);
+    box-shadow: inset 0 -4px 6px rgba(0,0,0,0.35), inset 0 3px 5px rgba(255,255,255,0.7), 0 6px 16px rgba(0,0,0,0.5);
+    color: #06243f;
+    font-size: 1.1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 20;
+  }
+  .back-top.visivel { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .back-top:active { transform: translateY(1px) scale(0.97); }
 
-        /* Main content */
-        main {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem 4rem;
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 3rem;
-        }
+  @media (prefers-reduced-motion: reduce) {
+    .back-top { transition: none; }
+  }
 
-        @media (max-width: 860px) {
-            main {
-                grid-template-columns: 1fr;
-            }
-            nav {
-                display: none;
-            }
-        }
+  @media (max-width: 560px) {
+    .aero-window { margin-top: 16px; border-radius: 10px; }
+    .titlebar { padding: 14px 16px; gap: 10px; }
+    .orb { width: 32px; height: 32px; }
+    main { padding: 20px 0 48px; }
+    .intro, footer { padding: 18px; }
+    .card-top { padding: 14px 16px 2px; }
+    .card-body { padding: 4px 16px 16px; }
+    .timeline { padding-left: 22px; }
+    .post::before { left: -22px; }
+  }
+</style>
 
-        /* Posts */
-        .posts-header {
-            margin-bottom: 2rem;
-        }
+<div class="aero-window">
+  <div class="titlebar">
+    <div class="orb" aria-hidden="true"></div>
+    <div>
+      <h1>Clippy Videos — Changelog</h1>
+      <p class="sub">clippy-videos.exe — registro de atualizações</p>
+    </div>
+    <div class="lights" aria-hidden="true">
+      <span class="min"></span><span class="max"></span><span class="close"></span>
+    </div>
+  </div>
+  <div class="glass-strip"></div>
+</div>
 
-        .posts-header h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.35rem;
-        }
+<main>
+  <section class="intro">
+    <span class="tag">clippy-videos · open source</span>
+    <p>Clippy Videos é uma alternativa open-source ao YouTube, feita em Python com Flask. Este blog reúne, em ordem cronológica, tudo que mudou no site nas últimas atualizações — de suporte a vídeo 360° até um chat ao vivo escrito em Go.</p>
+    <p>O código do site é distribuído sob a <strong>Licença Apache 2.0</strong> — mais detalhes no rodapé desta página.</p>
+  </section>
 
-        .posts-header p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
+  <div class="timeline">
 
-        article.post {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.75rem;
-            margin-bottom: 1.5rem;
-            transition: border-color 0.2s ease, transform 0.15s ease;
-        }
-
-        article.post:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .post-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem 1.25rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 0.85rem;
-        }
-
-        .post-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-
-        .tag {
-            background: rgba(245, 158, 11, 0.12);
-            color: var(--accent);
-            padding: 0.15rem 0.55rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        article.post h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 0.65rem;
-            line-height: 1.35;
-        }
-
-        article.post h3 a {
-            color: var(--text);
-        }
-
-        article.post h3 a:hover {
-            color: var(--primary);
-        }
-
-        article.post p {
-            color: var(--text-muted);
-            margin-bottom: 1.1rem;
-            font-size: 0.975rem;
-        }
-
-        .read-more {
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-
-        /* Sidebar */
-        aside {
-            position: sticky;
-            top: 5.5rem;
-            align-self: start;
-        }
-
-        .sidebar-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .sidebar-card h3 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            padding-bottom: 0.6rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-card p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .sidebar-links {
-            list-style: none;
-        }
-
-        .sidebar-links li {
-            margin-bottom: 0.6rem;
-        }
-
-        .sidebar-links a {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .sidebar-links a:hover {
-            color: var(--primary);
-        }
-
-        .tech-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .tech-item {
-            background: var(--surface-light);
-            color: var(--text);
-            font-size: 0.8rem;
-            padding: 0.3rem 0.65rem;
-            border-radius: 5px;
-            font-weight: 500;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            padding: 2.5rem 1.5rem;
-            text-align: center;
-        }
-
-        footer p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        footer .links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        footer .links a {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* Utility */
-        .highlight {
-            color: var(--accent);
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="header-container">
-            <a href="#" class="logo">
-                <div class="logo-icon"><img src="blog-logo.png"></div>
-            </a>
-            <nav>
-                <a href="#" class="active">Blog</a>
-                <a href="#sobre">Sobre</a>
-                <a href="#contribuir">Contribuir</a>
-                <a href="#docs">Documentação</a>
-            </nav>
-            <a href="https://github.com/Clippy-Videos-Inc" class="btn" target="_blank" rel="noopener">GitHub</a>
+    <article class="post">
+      <div class="card">
+        <div class="card-top">
+          <h2>Vídeo 360° e configurações de canal</h2>
+          <div class="meta">
+            <span class="date">Outubro de 2026</span>
+            <span class="pill feature">Novidade</span>
+          </div>
         </div>
-    </header>
-
-    <section class="hero">
-        <div class="badge">Projeto Open-Source</div>
-        <h1>Blog do Clippy Videos</h1>
-        <p>
-            Acompanhe o desenvolvimento, as novidades e as reflexões sobre a construção de uma plataforma de vídeos 
-            verdadeiramente livre, transparente e comunitária.
-        </p>
-        <a href="#posts" class="btn">Ver publicações recentes</a>
-    </section>
-
-    <main>
-        <div id="posts">
-            <div class="posts-header">
-                <h2>Publicações recentes</h2>
-                <p>Atualizações oficiais e artigos da equipe e da comunidade.</p>
-            </div>
-                <article class="post">
-                    <div class="post-meta">
-                        <span>18 de setembro de 2026</span>
-                        <span class="tag">Técnico</span>
-                        <span>Arquitetura</span>
-                    </div>
-                        <h3><a href="#">Suporte há Vídeos 360°</a></h3>
-                        <p>
-                        Finalmente, Adicionamos o Suporte há Vídeos 360° Completo!
-                        </p>
-                    <a href="#" class="read-more">Ler artigo completo →</a>
-                </article>
-                
-            <article class="post">
-                <div class="post-meta">
-                    <span>09 de setembro de 2025</span>
-                    <span class="tag">Anúncio</span>
-                    <span>Equipe Clippy</span>
-                </div>
-                <h3><a href="clippy-videos-artigo.html">Apresentando o Clippy Videos: uma alternativa open-source para compartilhamento de vídeos</a></h3>
-                <p>
-                    Hoje damos o primeiro passo oficial do Clippy Videos. O objetivo é simples e ambicioso: criar uma plataforma 
-                    de hospedagem e descoberta de vídeos que seja completamente open-source, respeite a privacidade dos usuários 
-                    e permita que qualquer pessoa hospede sua própria instância. Neste post explicamos a visão, a stack inicial 
-                    e o roadmap dos próximos meses.
-                </p>
-                <a href="clippy-videos-artigo.html" class="read-more">Ler artigo completo →</a>
-            </article>
-
-           
-
+        <div class="card-body">
+          <p>O player principal ganhou suporte a vídeos em 360°: uma esfera equiretangular navegável, construída com three.js, em que o vídeo funciona como textura e a "câmera" fica presa no centro, girando conforme o usuário arrasta a tela.</p>
+          <ul>
+            <li>Nova coluna <code>is_360</code> na tabela de vídeos, com uma caixa de seleção no envio e na edição do vídeo.</li>
+            <li>Arraste para olhar ao redor, roda do mouse para dar zoom, e um botão para recentralizar a vista.</li>
+            <li>Página nova de <strong>configurações do canal</strong>: trocar foto, trocar banner, alterar nome/bio, trocar senha e excluir o canal — tudo num só lugar.</li>
+          </ul>
         </div>
+      </div>
+    </article>
 
-        <aside>
-            <div class="sidebar-card" id="sobre">
-                <h3>Sobre o projeto</h3>
-                <p>
-                    O <span class="highlight">Clippy Videos</span> é um projeto open-source que busca construir 
-                    uma plataforma de vídeos livre, federada e centrada na comunidade. O código é público, as decisões 
-                    são transparentes e qualquer pessoa pode Modificar o Projeto (se estiver boas intenções).
-                </p>
-                <a href="#" class="btn" style="width:100%; text-align:center; margin-top:0.5rem;">Saiba mais</a>
-            </div>
-
-            <div class="sidebar-card" id="contribuir">
-                <h3>Como contribuir</h3>
-                <ul class="sidebar-links">
-                    <li><a href="https://www.github.com/Clippy-Videos-Inc/Clippy-Videos">→ Repositório no GitHub</a></li>
-                    <li><a href="https://www.github.com/Clippy-Videos-Inc/Clippy-Videos">→ Guia de contribuição</a></li>
-                    <li><a href="#">→ Roadmap público</a></li>
-                    <li><a href="#">→ Canal no Discord</a></li>
-                    <li><a href="#">→ Fórum da comunidade</a></li>
-                </ul>
-            </div>
-
-            <div class="sidebar-card" id="docs">
-                <h3>Stack tecnológica</h3>
-                <div class="tech-list">
-                    <span class="tech-item">Python</span>
-                    <span class="tech-item">Flask</span>
-                    <span class="tech-item">SQL</span>
-                    <span class="tech-item">FFmpeg</span>
-                    <span class="tech-item">secrets</span>
-                    <span class="tech-item">Nginx</span>
-                </div>
-            </div>
-
-            <div class="sidebar-card">
-                <h3>Newsletter</h3>
-                <p>Receba as atualizações mais importantes do projeto diretamente no seu e-mail.</p>
-                <a href="#" class="btn" style="width:100%; text-align:center;">Inscrever-se</a>
-            </div>
-        </aside>
-    </main>
-
-    <footer>
-        <p><strong>Clippy Videos</strong> — Projeto open-source de plataforma de vídeos.</p>
-        <p>Licença: APache-2.0 · Código disponível publicamente.</p>
-        <div class="links">
-            <a href="https://www.github.com/Clippy-Videos-Inc">GitHub</a>
-            <a href="https://www.github.com/Clippy-Videos-Inc/Clippy-Videos">Documentação</a>
-            <a href="#">Comunidade</a>
-            <a href="#">Contato</a>
-            <a href="#">Política de Privacidade</a>
+    <article class="post">
+      <div class="card">
+        <div class="card-top">
+          <h2>Lives de volta, player mobile unificado e posts redesenhados</h2>
+          <div class="meta">
+            <span class="date">Outubro de 2026</span>
+            <span class="pill feature">Novidade</span>
+          </div>
         </div>
-    </footer>
-</body>
-</html>
+        <div class="card-body">
+          <p>As transmissões ao vivo voltaram, agora com sinalização WebRTC própria: cada espectador recebe uma conexão peer-to-peer dedicada com quem está transmitindo, então o vídeo nunca passa pelo servidor.</p>
+          <ul>
+            <li>Página do transmissor (<code>/live</code>) e do espectador (<code>/lives/&lt;id&gt;</code>) reescritas para suportar vários espectadores ao mesmo tempo.</li>
+            <li>O player do celular passou a reaproveitar exatamente o mesmo player do computador, em vez de uma versão simplificada à parte — mesmos controles, mesma experiência.</li>
+            <li>A página de posts do canal foi redesenhada no mesmo visual escuro do resto do site.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="card">
+        <div class="card-top">
+          <h2>Correção: player quebrava ao abrir uma live</h2>
+          <div class="meta">
+            <span class="date">Outubro de 2026</span>
+            <span class="pill fix">Correção</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>Abrir uma transmissão ao vivo pelo player interno derrubava a página com um erro interno. A rota do player nunca enviava as informações do vídeo quando o conteúdo era uma live, e o template não sabia lidar com isso.</p>
+          <ul>
+            <li>O player agora trata vídeo e live como dois casos separados: título, comentários e vídeos relacionados só aparecem quando fazem sentido para cada um.</li>
+            <li>De brinde, a contagem de "gostei/não gostei" nos vídeos — que sempre aparecia zerada — voltou a refletir as reações de verdade.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="card">
+        <div class="card-top">
+          <h2>Correção: tela preta no player 360°</h2>
+          <div class="meta">
+            <span class="date">Outubro de 2026</span>
+            <span class="pill fix">Correção</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>Vídeos 360° abriam com a esfera completamente preta — não era uma limitação de formato de arquivo, eram dois detalhes de integração com o three.js.</p>
+          <ul>
+            <li>O vídeo vem de um servidor de arquivos estático separado (outra origem), e texturas de vídeo de outra origem precisam do atributo <code>crossorigin="anonymous"</code>, ou o navegador recusa silenciosamente desenhar a textura.</li>
+            <li>Com o vídeo parado em 0:00, o navegador carrega só os metadados, sem decodificar nenhum quadro — um pequeno avanço de posição logo no início força a primeira imagem a aparecer.</li>
+            <li>A correção foi aplicada só para vídeos 360°, para não arriscar nada na reprodução normal.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="card">
+        <div class="card-top">
+          <h2>Sistema de categorias de vídeo</h2>
+          <div class="meta">
+            <span class="date">24 de outubro de 2026</span>
+            <span class="pill feature">Novidade</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>Todo vídeo publicado agora pode receber uma categoria — Jogos, Música, Educação, Entretenimento, Esportes, Notícias, Tecnologia, Vlogs, Humor, Ciência ou Outros.</p>
+          <ul>
+            <li>Campo de categoria no formulário de envio (computador e celular) e na edição de vídeos já publicados.</li>
+            <li>Filtro por categoria na busca (<code>/buscar?categoria=</code>) e uma faixa de categorias navegável direto na página inicial.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="card">
+        <div class="card-top">
+          <h2>Chat ao vivo e notificações da conta, em Go</h2>
+          <div class="meta">
+            <span class="date">24 de outubro de 2026</span>
+            <span class="pill infra">Infraestrutura</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>Dois serviços novos, escritos em Go, rodando ao lado do site principal em Flask — cada um na sua própria porta, do mesmo jeito que os outros serviços independentes do projeto.</p>
+          <ul>
+            <li><strong>Chat ao vivo:</strong> um canal de WebSocket por transmissão, com histórico recente carregado assim que alguém entra. Assistir ao chat é livre; para enviar mensagem é preciso estar logado no site.</li>
+            <li><strong>Notificações da conta:</strong> um sino no canto superior direito da página inicial, com contagem de não lidas e entrega em tempo real. Disparado quando alguém se inscreve no seu canal, quando um canal que você segue entra ao vivo, ou publica um vídeo novo.</li>
+            <li>O Flask e os serviços em Go compartilham identidade sem reimplementar o login: um token curto, assinado com uma chave compartilhada, prova quem é o usuário logado sem expor a senha nem a sessão.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="post">
+      <div class="card">
+        <div class="card-top">
+          <h2>Player adaptado para telas menores</h2>
+          <div class="meta">
+            <span class="date">27 de outubro de 2026</span>
+            <span class="pill fix">Ajuste</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>O player interno do site (<code>watch.html</code>) ganhou dois pontos de quebra responsivos para caber melhor em telas de tablet e celular.</p>
+          <ul>
+            <li>Botões, ícones, título, relógio, selo de 360° e o painel de vídeos relacionados encolhem progressivamente conforme a tela diminui.</li>
+            <li>Em telas bem pequenas, a barra deslizante de volume some e sobra só o botão de mudo, e o título do vídeo passa a truncar com reticências em vez de quebrar o layout.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer>
+  <strong>Licença</strong> — O código-fonte do Clippy Videos é distribuído sob a <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener">Licença Apache, Versão 2.0</a>. Em resumo: você pode usar, modificar, distribuir e até vender o software livremente, inclusive em projetos fechados, desde que mantenha o aviso de direitos autorais e a própria licença junto do código, e sem usar o nome do projeto para endossar algo que você fez a partir dele. O texto completo e oficial da licença está no link acima.
+</footer>
+
+<button class="back-top" id="btnTopo" aria-label="Voltar ao topo" title="Voltar ao topo">▲</button>
+
+<script>
+(function () {
+  var btn = document.getElementById('btnTopo');
+  function atualizar() {
+    if (window.scrollY > 420) btn.classList.add('visivel');
+    else btn.classList.remove('visivel');
+  }
+  window.addEventListener('scroll', atualizar, { passive: true });
+  btn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  atualizar();
+})();
+</script>
+
+</body></html>
